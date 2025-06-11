@@ -13,21 +13,23 @@
                     Créée le {{subject['created_at']}}
                 </p>
             </div>
-            <div class="flex gap-3">
-                <a href="/subjects/{{subject['id']}}/edit" 
-                   class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                    <i class="fas fa-edit mr-2"></i>
-                    Modifier
-                </a>
-                <form action="/subjects/{{subject['id']}}/delete" method="post" class="inline">
-                    <button type="submit" 
-                            class="inline-flex items-center rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 shadow-sm ring-1 ring-inset ring-red-600/10 hover:bg-red-100"
-                            onclick="return confirm('Confirmer la suppression ?')">
-                        <i class="fas fa-trash-alt mr-2"></i>
-                        Supprimer
-                    </button>
-                </form>
-            </div>
+            % if isAdmin:
+                <div class="flex gap-3">
+                    <a href="/subjects/{{subject['id']}}/edit" 
+                       class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                        <i class="fas fa-edit mr-2"></i>
+                        Modifier
+                    </a>
+                    <form action="/subjects/{{subject['id']}}/delete" method="post" class="inline">
+                        <button type="submit" 
+                                class="inline-flex items-center rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 shadow-sm ring-1 ring-inset ring-red-600/10 hover:bg-red-100"
+                                onclick="return confirm('Confirmer la suppression ?')">
+                            <i class="fas fa-trash-alt mr-2"></i>
+                            Supprimer
+                        </button>
+                    </form>
+                </div>
+            % end
         </div>
     </div>
     <div class="border-t border-gray-100">
@@ -45,16 +47,17 @@
 % if defined('documents') and documents:
     <div class="mt-8">
         <div class="sm:flex sm:items-center">
-            <div class="sm:flex-auto">
-                <h3 class="text-lg font-semibold text-gray-900">Documents de la matière</h3>
+            <div class="sm:flex-auto">                <h3 class="text-lg font-semibold text-gray-900">Documents de la matière</h3>
                 <p class="mt-2 text-sm text-gray-700">Liste des ressources disponibles pour cette matière</p>
             </div>
-            <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                <a href="/documents/create" class="inline-flex items-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-secondary">
-                    <i class="fas fa-plus mr-2"></i>
-                    Ajouter un document
-                </a>
-            </div>
+            % if isAdmin:
+                <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+                    <a href="/documents/create" class="inline-flex items-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-secondary">
+                        <i class="fas fa-plus mr-2"></i>
+                        Ajouter un document
+                    </a>
+                </div>
+            % end
         </div>
         <div class="mt-4 flow-root">
             <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -114,17 +117,19 @@
                                                    class="text-primary hover:text-secondary">
                                                     <i class="fas fa-download"></i>
                                                 </a>
-                                                <a href="/documents/{{doc['id']}}/edit"
-                                                   class="text-gray-600 hover:text-gray-900">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <form action="/documents/{{doc['id']}}/delete" method="post" class="inline">
-                                                    <button type="submit"
-                                                            class="text-red-600 hover:text-red-900"
-                                                            onclick="return confirm('Confirmer la suppression ?')">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </button>
-                                                </form>
+                                                % if isAdmin:
+                                                    <a href="/documents/{{doc['id']}}/edit"
+                                                       class="text-gray-600 hover:text-gray-900">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <form action="/documents/{{doc['id']}}/delete" method="post" class="inline">
+                                                        <button type="submit"
+                                                                class="text-red-600 hover:text-red-900"
+                                                                onclick="return confirm('Confirmer la suppression ?')">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </form>
+                                                % end
                                             </div>
                                         </td>
                                     </tr>
@@ -140,10 +145,12 @@
     <div class="mt-8 bg-white shadow sm:rounded-lg p-6 text-center text-gray-500">
         <i class="fas fa-file-alt text-4xl mb-4"></i>
         <p>Aucun document n'est associé à cette matière.</p>
-        <a href="/documents/create" class="inline-flex items-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-secondary mt-4">
-            <i class="fas fa-plus mr-2"></i>
-            Ajouter un document
-        </a>
+        % if isAdmin:
+            <a href="/documents/create" class="inline-flex items-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-secondary mt-4">
+                <i class="fas fa-plus mr-2"></i>
+                Ajouter un document
+            </a>
+        % end
     </div>
 % end
 

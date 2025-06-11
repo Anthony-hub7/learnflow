@@ -5,6 +5,12 @@ from models.document_tag_model import DocumentTagModel
 from controllers.base_controller import BaseController
 
 class DocumentsController(BaseController):
+    """
+    Contrôleur pour la gestion des documents.
+    Hérite du contrôleur de base pour les opérations CRUD standards.
+    Gère l'upload, le stockage et la récupération des documents.
+    """
+
     def __init__(self):
         self.app = Bottle()
         self.register_routes()
@@ -18,10 +24,25 @@ class DocumentsController(BaseController):
         self.app.route('/documents/<id:int>/download', callback=self.download_document)
 
     def list_documents(self):
+        """
+        Affiche la liste de tous les documents.
+        
+        Returns:
+            Le template 'documents/index.html' avec la liste des documents
+        """
         isAdmin = request.session.get('isAdmin', False)
         return self.list(DocumentModel, 'documents/index', context_name='documents', template=template, isAdmin=isAdmin)
 
     def show_document(self, id):
+        """
+        Affiche les détails d'un document spécifique.
+        
+        Args:
+            id: L'identifiant du document à afficher
+            
+        Returns:
+            Le template 'documents/show.html' avec les détails du document
+        """
         isAdmin = request.session.get('isAdmin', False)
         document_model = DocumentModel()
         document = document_model.get(id)
@@ -40,6 +61,18 @@ class DocumentsController(BaseController):
         return template('documents/show', document=document, isAdmin=isAdmin)
 
     def create_document(self):
+        """
+        Gère la création d'un nouveau document avec upload de fichier.
+        
+        Args:
+            request: L'objet requête contenant les données du formulaire et le fichier
+            
+        Returns:
+            Redirige vers la liste des documents après la création
+            
+        Notes:
+            Gère l'upload du fichier et sa sauvegarde sur le serveur
+        """
         isAdmin = request.session.get('isAdmin', False)
         subjects = subjectsModel().all()
 
@@ -66,6 +99,16 @@ class DocumentsController(BaseController):
 
 
     def edit_document(self, id):
+        """
+        Gère la modification d'un document existant.
+        
+        Args:
+            id: L'identifiant du document à modifier
+            request: L'objet requête contenant les données du formulaire
+            
+        Returns:
+            Redirige vers la liste des documents après la modification
+        """
         isAdmin = request.session.get('isAdmin', False)
         subjects = subjectsModel().all()
         instance = DocumentModel()
@@ -99,8 +142,29 @@ class DocumentsController(BaseController):
 
 
     def delete_document(self, id):
+        """
+        Supprime un document spécifique et son fichier associé.
+        
+        Args:
+            id: L'identifiant du document à supprimer
+            
+        Returns:
+            Redirige vers la liste des documents après la suppression
+            
+        Notes:
+            Supprime également le fichier physique du serveur
+        """
         return self.delete(DocumentModel, id, '/documents')
     def download_document(self, id):
+        """
+        Permet le téléchargement d'un document.
+        
+        Args:
+            id: L'identifiant du document à télécharger
+            
+        Returns:
+            Le fichier en téléchargement avec les en-têtes appropriés
+        """
         instance = DocumentModel()
         document = instance.get(id)
         instance.close()

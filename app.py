@@ -1,3 +1,14 @@
+"""
+Point d'entrée principal de l'application LearnFlow.
+Configure le serveur Bottle, gère les sessions et les routes principales.
+
+Ce module:
+- Initialise l'application Bottle
+- Configure la gestion des sessions en mémoire
+- Enregistre les routes des différents contrôleurs
+- Gère l'authentification (login/logout)
+"""
+
 from bottle import Bottle, request, redirect, template, response
 import uuid
 import time
@@ -15,7 +26,17 @@ sessions = {}
 SESSION_TIMEOUT = 3600  # 1 heure
 
 def get_session():
-    """Récupère ou crée une session"""
+    """
+    Récupère ou crée une session pour l'utilisateur courant.
+    
+    Returns:
+        dict: Les données de session de l'utilisateur
+        
+    Notes:
+        - Vérifie si un cookie de session existe
+        - Si la session est expirée, en crée une nouvelle
+        - Met à jour le timestamp de dernier accès
+    """
     session_id = request.get_cookie('session_id')
     
     if session_id and session_id in sessions:
@@ -38,6 +59,10 @@ def get_session():
 # Hook pour injecter la session dans request
 @app.hook('before_request')
 def inject_session():
+    """
+    Hook exécuté avant chaque requête pour injecter la session.
+    Rend la session accessible via request.session dans toute l'application.
+    """
     request.session = get_session()
 
 # Enregistrement des routes principales
@@ -50,6 +75,17 @@ app.mount('/', document_tags_ctrl)
 
 @app.route('/login', method=['GET', 'POST'])
 def login():
+    """
+    Gère la page de connexion et l'authentification.
+    
+    Returns:
+        str: Template de login ou redirection vers l'accueil si connexion réussie
+        
+    Notes:
+        - Vérifie le mot de passe en POST
+        - Stocke l'état d'authentification dans la session
+        - Affiche une erreur si mot de passe incorrect
+    """
     session = request.session  # accès à la session
     if request.method == 'POST':
         password = request.forms.get('password')
@@ -63,15 +99,34 @@ def login():
 
 @app.route('/logout')
 def logout():
+    """
+    Gère la déconnexion de l'utilisateur.
+    
+    Returns:
+        Redirection vers la page de login
+        
+    Notes:
+        Supprime la marque d'authentification de la session
+    """
     session = request.session
     session.pop('isAdmin', None)  # supprime la clé isAdmin
     return redirect('/login')
 
 @app.route('/')
 def index():
+    """
+    Page d'accueil de l'application.
+    
+    Returns:
+        str: Template de la page d'accueil avec l'état d'authentification
+    """
     session = request.session
     is_admin = session.get('isAdmin', False)
     return template('home', is_admin=is_admin)
 
 if __name__ == '__main__':
+    """
+    Point d'entrée pour le démarrage du serveur en mode développement.
+    Configure le serveur sur localhost:8081 avec le mode debug activé.
+    """
     app.run(host='localhost', port=8081, debug=True)

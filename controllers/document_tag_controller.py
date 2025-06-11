@@ -5,6 +5,11 @@ from models.tag_model import TagModel
 from controllers.base_controller import BaseController
 
 class DocumentTagsController(BaseController):
+    """
+    Contrôleur pour la gestion des relations entre documents et tags.
+    Hérite du contrôleur de base pour les opérations CRUD standards.
+    """
+
     def __init__(self):
         self.app = Bottle()
         self.register_routes()
@@ -19,6 +24,15 @@ class DocumentTagsController(BaseController):
         self.app.route('/tags/summary', method='GET', callback=self.tag_summary)
 
     def list_tags_for_document(self, document_id):
+        """
+        Affiche la liste des tags pour un document spécifique.
+
+        Args:
+            document_id: L'identifiant du document
+
+        Returns:
+            Le template 'documents_tag/list' avec les détails du document et ses tags
+        """
         isAdmin = request.session.get('isAdmin', False)
         try:
             doc_model = DocumentModel()
@@ -48,6 +62,15 @@ class DocumentTagsController(BaseController):
             except: pass
 
     def add_tag_to_document(self, document_id):
+        """
+        Ajoute un ou plusieurs tags à un document.
+
+        Args:
+            document_id: L'identifiant du document
+
+        Returns:
+            Redirige vers la liste des tags du document
+        """
         tag_ids = request.forms.getall('tag_ids[]')
         if not tag_ids:
             response.status = 400
@@ -66,6 +89,16 @@ class DocumentTagsController(BaseController):
         return redirect(f'/documents/{document_id}/tags')
 
     def remove_tag_from_document(self, document_id, tag_id):
+        """
+        Supprime un tag d'un document.
+
+        Args:
+            document_id: L'identifiant du document
+            tag_id: L'identifiant du tag à supprimer
+
+        Returns:
+            Redirige vers la liste des tags du document
+        """
         if request.forms.get('_method') != 'DELETE':
             response.status = 405
             return 'Méthode non autorisée'
@@ -87,6 +120,15 @@ class DocumentTagsController(BaseController):
             return 'Erreur lors de la suppression du tag'
 
     def list_documents_for_tag(self, tag_id):
+        """
+        Affiche la liste des documents associés à un tag spécifique.
+
+        Args:
+            tag_id: L'identifiant du tag
+
+        Returns:
+            Le template 'documents_tag/documents_by_tag' avec les détails du tag et ses documents
+        """
         isAdmin = request.session.get('isAdmin', False)
         try:
             tag_model = TagModel()
@@ -116,6 +158,15 @@ class DocumentTagsController(BaseController):
             except: pass
 
     def add_documents_to_tag(self, tag_id):
+        """
+        Ajoute un ou plusieurs documents à un tag.
+
+        Args:
+            tag_id: L'identifiant du tag
+
+        Returns:
+            Redirige vers la liste des documents du tag
+        """
         doc_ids = request.forms.getall('document_ids[]')
         if not doc_ids:
             response.status = 400
@@ -134,6 +185,12 @@ class DocumentTagsController(BaseController):
         return redirect(f'/tags/{tag_id}/documents')
 
     def tag_summary(self):
+        """
+        Affiche un résumé du nombre de documents par tag.
+
+        Returns:
+            Le template 'documents_tag/summary' avec le résumé des documents par tag
+        """
         isAdmin = request.session.get('isAdmin', False)
         try:
             model = DocumentTagModel()

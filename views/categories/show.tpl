@@ -11,18 +11,20 @@
                     Créée le {{category['created_at']}}
                 </p>
             </div>
-            <div class="flex gap-3">
-                <a href="/categories/{{category['id']}}/edit" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                    <i class="fas fa-edit mr-2"></i>
-                    Modifier
-                </a>
-                <form action="/categories/{{category['id']}}/delete" method="post" class="inline">
-                    <button type="submit" class="inline-flex items-center rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 shadow-sm ring-1 ring-inset ring-red-600/10 hover:bg-red-100" onclick="return confirm('Confirmer la suppression ?')">
-                        <i class="fas fa-trash-alt mr-2"></i>
-                        Supprimer
-                    </button>
-                </form>
-            </div>
+            % if isAdmin:
+                <div class="flex gap-3">
+                    <a href="/categories/{{category['id']}}/edit" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                        <i class="fas fa-edit mr-2"></i>
+                        Modifier
+                    </a>
+                    <form action="/categories/{{category['id']}}/delete" method="post" class="inline">
+                        <button type="submit" class="inline-flex items-center rounded-md bg-red-50 px-3 py-2 text-sm font-semibold text-red-700 shadow-sm ring-1 ring-inset ring-red-600/10 hover:bg-red-100" onclick="return confirm('Confirmer la suppression ?')">
+                            <i class="fas fa-trash-alt mr-2"></i>
+                            Supprimer
+                        </button>
+                    </form>
+                </div>
+            % end
         </div>
     </div>
     <div class="border-t border-gray-100">
@@ -55,18 +57,20 @@
                                         <p class="mt-1 text-sm text-gray-500">{{subj['description']}}</p>
                                     % end
                                 </div>
-                                <div class="ml-4 flex flex-shrink-0 gap-2">
-                                    <a href="/subjects/{{subj['id']}}/edit" class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                        <i class="fas fa-edit mr-1"></i>
-                                        Modifier
-                                    </a>
-                                    <form action="/subjects/{{subj['id']}}/delete" method="post" class="inline">
-                                        <button type="submit" class="inline-flex items-center rounded-md bg-red-50 px-2.5 py-1.5 text-sm font-semibold text-red-700 shadow-sm ring-1 ring-inset ring-red-600/10 hover:bg-red-100">
-                                            <i class="fas fa-trash-alt mr-1"></i>
-                                            Supprimer
-                                        </button>
-                                    </form>
-                                </div>
+                                % if isAdmin:
+                                    <div class="ml-4 flex flex-shrink-0 gap-2">
+                                        <a href="/subjects/{{subj['id']}}/edit" class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                            <i class="fas fa-edit mr-1"></i>
+                                            Modifier
+                                        </a>
+                                        <form action="/subjects/{{subj['id']}}/delete" method="post" class="inline">
+                                            <button type="submit" class="inline-flex items-center rounded-md bg-red-50 px-2.5 py-1.5 text-sm font-semibold text-red-700 shadow-sm ring-1 ring-inset ring-red-600/10 hover:bg-red-100">
+                                                <i class="fas fa-trash-alt mr-1"></i>
+                                                Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
+                                % end
                             </div>
                         </div>
                     </li>

@@ -10,3 +10,39 @@ def home_routes(app):
     @app.route('/')
     def home():
         return base_ctrl.home('home', template=template, db_status=None)
+
+class HomeController(BaseController):
+    """
+    Contrôleur pour la gestion de la page d'accueil.
+    Hérite du contrôleur de base et fournit les fonctionnalités de la page d'accueil.
+    """
+
+    def index(self):
+        """
+        Affiche la page d'accueil avec un résumé des données.
+        
+        Returns:
+            Le template 'home/index.html' avec les statistiques et informations récentes
+        """
+        # ...existing code...
+
+    def about(self):
+        """
+        Affiche la page À propos.
+        
+        Returns:
+            Le template 'home/about.html' avec les informations sur l'application
+        """
+        # ...existing code...
+
+    def dashboard(self):
+        """
+        Affiche le tableau de bord avec les statistiques.
+        
+        Returns:
+            Le template 'home/dashboard.html' avec les statistiques de l'application
+            
+        Notes:
+            Inclut des statistiques sur les documents, catégories et tags
+        """
+        # ...existing code...
