@@ -9,9 +9,10 @@ Ce module:
 - Gère l'authentification (login/logout)
 """
 
-from bottle import Bottle, request, redirect, template, response
+from bottle import Bottle, request, redirect, template, response, static_file
 import uuid
 import time
+import os
 from controllers.home_controller import home_routes
 from controllers.category_controller import categories_ctrl
 from controllers.subjects_controller import subjects_ctrl
@@ -123,6 +124,11 @@ def index():
     session = request.session
     is_admin = session.get('isAdmin', False)
     return template('home', is_admin=is_admin)
+
+@app.route('/static/<filepath:path>')
+def serve_static(filepath):
+    """Sert les fichiers statiques depuis le dossier static"""
+    return static_file(filepath, root='./views/static/')
 
 if __name__ == '__main__':
     """

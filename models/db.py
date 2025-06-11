@@ -1,8 +1,10 @@
 import pymysql
+import pymysql.cursors
 from dotenv import load_dotenv
 import os
 
-load_dotenv(override=True)
+# Chargement des variables d'environnement
+load_dotenv()
 
 class DB:
     """
@@ -22,93 +24,68 @@ class DB:
                       et relève l'exception d'origine.
         """
         try:
-            self.connection = pymysql.connect(
-                host=os.getenv('DB_HOST'),
-                user=os.getenv('DB_USER'),
-                password=os.getenv('DB_PASSWORD'),
-                database=os.getenv('DB_NAME'),
-                port=int(os.getenv('DB_PORT')),
-                charset='utf8mb4',
+            self.conn = pymysql.connect(
+                host=os.getenv('DB_HOST', 'localhost'),
+                user=os.getenv('DB_USER', 'root'),
+                password=os.getenv('DB_PASSWORD', ''),
+                db=os.getenv('DB_NAME', 'learnflow'),
+                charset=os.getenv('DB_CHARSET', 'utf8mb4'),
                 cursorclass=pymysql.cursors.DictCursor
             )
-        except Exception as e:
-            print(f"Erreur de connexion à la base de données: {str(e)}")
-            print(f"Paramètres de connexion:")
-            print(f"Hôte: {os.getenv('DB_HOST')}")
-            print(f"Utilisateur: {os.getenv('DB_USER')}")
-            print(f"Base de données: {os.getenv('DB_NAME')}")
-            print(f"Port: {os.getenv('DB_PORT')}")
+        except pymysql.Error as e:
+            print(f"Error connecting to MySQL Platform: {e}")
+            print(f"Using configuration:")
+            print(f"Host: {os.getenv('DB_HOST', 'localhost')}")
+            print(f"User: {os.getenv('DB_USER', 'root')}")
+            print(f"Database: {os.getenv('DB_NAME', 'learnflow')}")
             raise
 
-    def fetchall(self, sql, params=None):
-        """
-        Exécute une requête SELECT et retourne toutes les lignes correspondantes.
+    def execute(self, query, params=()):
+        """Exécute une requête SQL et retourne le curseur"""
+        cursor = self.conn.cursor()
+        cursor.execute(query, params)
+        return cursor
 
-        Arguments:
-            sql (str): Requête SQL à exécuter
-            params (tuple, optionnel): Paramètres à substituer dans la requête. Par défaut None.
+    def fetchall(self, query, params=()):
+        """Exécute une requête et retourne tous les résultats"""
+        cursor = self.execute(query, params)
+        result = cursor.fetchall()
+        cursor.close()
+        return result
 
-        Retourne:
-            list: Liste de dictionnaires, chacun représentant une ligne du résultat.
-        """
-        with self.connection.cursor() as cursor:
-            cursor.execute(sql, params or ())
-            return cursor.fetchall()
+    def fetchone(self, query, params=()):
+        """Exécute une requête et retourne un seul résultat"""
+        cursor = self.execute(query, params)
+        result = cursor.fetchone()
+        cursor.close()
+        return result
 
-    def fetchone(self, sql, params=None):
-        """
-        Exécute une requête SELECT et retourne la première ligne correspondante.
+    def execute_and_commit(self, query, params=()):
+        """Exécute une requête et effectue un commit"""
+        cursor = self.execute(query, params)
+        self.conn.commit()
+        cursor.close()
 
-        Arguments:
-            sql (str): Requête SQL à exécuter
-            params (tuple, optionnel): Paramètres à substituer dans la requête. Par défaut None.
+    def execute_and_lastrowid(self, query, params=()):
+        """Exécute une requête et retourne l'ID de la dernière ligne insérée"""
+        cursor = self.execute(query, params)
+        self.conn.commit()
+        last_id = cursor.lastrowid
+        cursor.close()
+        return last_id
 
-        Retourne:
-            dict: Dictionnaire représentant la première ligne du résultat,
-                 ou None si aucune ligne n'est trouvée.
-        """
-        with self.connection.cursor() as cursor:
-            cursor.execute(sql, params or ())
-            return cursor.fetchone()
-
-    def execute_and_lastrowid(self, sql, params=None):
-        """
-        Exécute une requête INSERT et retourne l'ID de la dernière ligne insérée.
-
-        Arguments:
-            sql (str): Requête SQL à exécuter (typiquement INSERT)
-            params (tuple, optionnel): Paramètres à substituer dans la requête. Par défaut None.
-
-        Retourne:
-            int: ID de la dernière ligne insérée
-        """
-        with self.connection.cursor() as cursor:
-            cursor.execute(sql, params or ())
-            self.connection.commit()
-            return cursor.lastrowid
-
-    def execute_and_rowcount(self, sql, params=None):
-        """
-        Exécute une requête UPDATE ou DELETE et retourne le nombre de lignes affectées.
-
-        Arguments:
-            sql (str): Requête SQL à exécuter (typiquement UPDATE ou DELETE)
-            params (tuple, optionnel): Paramètres à substituer dans la requête. Par défaut None.
-
-        Retourne:
-            int: Nombre de lignes affectées par la requête
-        """
-        with self.connection.cursor() as cursor:
-            cursor.execute(sql, params or ())
-            self.connection.commit()
-            return cursor.rowcount
+    def execute_and_rowcount(self, query, params=()):
+        """Exécute une requête et retourne le nombre de lignes affectées"""
+        cursor = self.execute(query, params)
+        self.conn.commit()
+        rowcount = cursor.rowcount
+        cursor.close()
+        return rowcount
 
     def close(self):
-        """
-        Ferme la connexion à la base de données.
-        Doit être appelé une fois les opérations terminées pour libérer les ressources.
-        """
-        self.connection.close()
+        """Ferme la connexion à la base de données"""
+        if hasattr(self, 'conn'):
+            self.conn.close()
 
 def test_db_connection():
     """

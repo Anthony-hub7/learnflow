@@ -1,5 +1,5 @@
 import pymysql
-from .db import DB
+from models.db import DB
 import os
 
 class subjectsModel(DB):
@@ -12,7 +12,8 @@ class subjectsModel(DB):
 
     def __init__(self):
         """Initialise SubjectsModel en établissant une connexion à la base de données via la classe parente DB."""
-        super().__init__()
+        self.table = 'subjects'  # Définition du nom de la table
+        super().__init__()  # Appel du constructeur parent après définition de self.table
 
     def all(self):
         """

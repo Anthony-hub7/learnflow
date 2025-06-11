@@ -11,6 +11,7 @@ class categoriesModel(DB):
 
     def __init__(self):
         """Initialise CategoriesModel en établissant une connexion à la base de données via la classe parente DB."""
+        self.table = 'categories'  # Définition du nom de la table
         super().__init__()
 
     def all(self):

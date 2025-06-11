@@ -11,6 +11,7 @@ class DocumentTagModel(DB):
 
     def __init__(self):
         """Initialise DocumentTagModel en établissant une connexion à la base de données via la classe parente DB."""
+        self.table = 'document_tags'  # Définition du nom de la table
         super().__init__()
 
     def all(self):

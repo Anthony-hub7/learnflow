@@ -19,6 +19,7 @@
             }
         }
     </script>
+    <script src="/static/js/pagination.js" defer></script>
 </head>
 <body class="h-full">
     <div class="min-h-full">

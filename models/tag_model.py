@@ -10,6 +10,7 @@ class TagModel(DB):
 
     def __init__(self):
         """Initialise TagModel en établissant une connexion à la base de données via la classe parente DB."""
+        self.table = 'tags'  # Définition du nom de la table
         super().__init__()
 
     def all(self):

@@ -43,9 +43,9 @@
                                 % end
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200 bg-white">
+                        <tbody class="divide-y divide-gray-200 bg-white" data-pagination>
                             % for doc in documents:
-                                <tr class="hover:bg-gray-50">
+                                <tr class="hover:bg-gray-50" data-pagination-item>
                                     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                                         {{doc['title']}}
                                     </td>
@@ -95,6 +95,10 @@
                     </table>
                 </div>
             % end
+        </div>
+    
+        <div class="px-4 py-3 sm:px-6">
+            % include('pagination.tpl')
         </div>
     </div>
 </div>

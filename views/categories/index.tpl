@@ -15,10 +15,10 @@
     </div>
 
     <div class="border-t border-gray-200">
-        <ul role="list" class="divide-y divide-gray-200">
+        <ul role="list" class="divide-y divide-gray-200" data-pagination>
             % if categories:
                 % for cat in categories:
-                    <li class="px-4 py-4 sm:px-6 hover:bg-gray-50">
+                    <li class="px-4 py-4 sm:px-6 hover:bg-gray-50" data-pagination-item>
                         <div class="flex items-center justify-between">
                             <div class="min-w-0 flex-1">
                                 <a href="/categories/{{cat['id']}}" class="text-sm font-medium text-primary hover:text-secondary">
@@ -53,5 +53,9 @@
                 </li>
             % end
         </ul>
+    </div>
+
+    <div class="mt-4">
+        % include('pagination.tpl')
     </div>
 </div>
