@@ -1,0 +1,4 @@
+bottle
+pymysql
+python-dotenv
+bottle-session

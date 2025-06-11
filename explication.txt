@@ -1,0 +1,27 @@
+
+GitHub Copilot
+Voici comment j’ai structuré et automatisé la logique de ton projet pour le rendre dynamique, réutilisable et proche d’un mini-framework MVC :
+
+1. Contrôleur de base (BaseController)
+J’ai créé une classe BaseController qui centralise les méthodes CRUD génériques (list, show, create, edit, delete).
+Chaque méthode prend en paramètre le modèle, le nom du template, et un nom de variable contextuel optionnel (context_name).
+Par défaut, le nom de la variable envoyée au template est basé sur le nom du modèle (ex: category pour CategoryModel), mais tu peux le forcer avec context_name pour t’adapter à tes templates.
+2. Contrôleur métier (categoriesController)
+Le contrôleur spécifique hérite de BaseController.
+Il ne fait que déclarer les routes et appeler les méthodes du contrôleur de base, en précisant le modèle, le template, et le nom de variable attendu par le template.
+Exemple :
+Cela garantit que la variable categories sera bien envoyée au template, peu importe le nom du modèle.
+3. Modèle
+Le modèle gère la logique d’accès à la base de données (CRUD) et hérite d’une classe de connexion générique.
+4. Templates
+Les templates attendent des variables précises (categories, category, etc.).
+Grâce au paramètre context_name, tu peux toujours faire correspondre le nom de la variable envoyée au template avec ce que tu utilises dans le template, sans te soucier du pluriel ou du nom du modèle.
+5. Dynamisme et personnalisation
+Tu peux réutiliser ce schéma pour n’importe quelle entité (subjects, documents, etc.) en ne changeant que le modèle et le nom de variable contextuel.
+Tu gardes la main sur la structure, le nommage, et la logique métier.
+6. Pourquoi ce choix ?
+Cela évite les problèmes de pluriel/singulier et d’exception de nommage.
+Tu n’as pas besoin de dépendances externes.
+Tu peux personnaliser chaque contrôleur métier si besoin, tout en gardant une base DRY (Don’t Repeat Yourself).
+En résumé :
+Le contrôleur de base gère la logique générique, chaque contrôleur métier ne fait qu’appeler ces méthodes en précisant le modèle, le template, et le nom de variable attendu. Tu gardes ainsi un code propre, réutilisable et facile à maintenir, tout en restant maître de la structure de ton framework.
