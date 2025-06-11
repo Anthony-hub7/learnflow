@@ -141,6 +141,93 @@ Pour toute question ou problème :
 2. Vérifiez les logs de l'application
 3. Contactez l'équipe de développement
 
+## Gestion du code source avec Git
+
+### Configuration initiale
+
+1. Initialisez un nouveau dépôt Git :
+   ```bash
+   git init
+   ```
+
+2. Configurez votre identité Git :
+   ```bash
+   git config user.name "Votre Nom"
+   git config user.email "votre.email@exemple.com"
+   ```
+
+### Première publication sur GitHub
+
+1. Créez un nouveau dépôt sur GitHub (sans README, licence ni .gitignore)
+
+2. Ajoutez votre dépôt distant :
+   ```bash
+   git remote add origin https://github.com/votre-username/learnflow.git
+   ```
+
+3. Ajoutez les fichiers au suivi Git :
+   ```bash
+   git add .
+   ```
+
+4. Créez votre premier commit :
+   ```bash
+   git commit -m "Initial commit : LearnFlow application"
+   ```
+
+5. Poussez votre code :
+   ```bash
+   git push -u origin main
+   ```
+
+### Workflow Git quotidien
+
+1. Vérifiez l'état de votre dépôt :
+   ```bash
+   git status
+   ```
+
+2. Récupérez les dernières modifications :
+   ```bash
+   git pull origin main
+   ```
+
+3. Créez une nouvelle branche pour vos modifications :
+   ```bash
+   git checkout -b feature/nom-de-la-fonctionnalite
+   ```
+
+4. Faites vos modifications et commitez :
+   ```bash
+   git add .
+   git commit -m "Description claire des modifications"
+   ```
+
+5. Poussez vos modifications :
+   ```bash
+   git push origin feature/nom-de-la-fonctionnalite
+   ```
+
+6. Créez une Pull Request sur GitHub pour faire réviser votre code
+
+### Bonnes pratiques Git
+
+- Faites des commits atomiques (une seule fonctionnalité par commit)
+- Écrivez des messages de commit descriptifs
+- Utilisez des branches pour les nouvelles fonctionnalités
+- Faites des pull requests pour la revue de code
+- Gardez votre historique Git propre
+
+### Fichiers ignorés
+
+Le projet inclut un fichier `.gitignore` qui exclut :
+- Les fichiers Python compilés (__pycache__)
+- L'environnement virtuel (venv)
+- Les fichiers de configuration IDE
+- Les fichiers de logs
+- Les fichiers uploadés
+- Les fichiers de configuration locaux
+
 ---
 
 © 2025 LearnFlow - Développé avec ❤️ pour l'éducation
